@@ -1,3 +1,3 @@
-Dette er en readme fil
+This is a websocket "hello world" example with apache camel(2.10) server side and Dojo Toolkit on client side.
 
-meget fasinerende
+PS: The dojo.js is custom built. If you play around with the dojo code, you either have to get a copy of entire dojo and dump it in, or make your own custom build(recommended but alot of hassle)
