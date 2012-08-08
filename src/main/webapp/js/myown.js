@@ -25,7 +25,8 @@ require([
 				}
 				else
 				{
-					myLog( "" + event.data );					
+					var resInfo = json.parse(event.data);
+					myLog( "" + resInfo.msg );					
 				}				
 			});
 
