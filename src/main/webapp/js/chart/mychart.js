@@ -28,7 +28,7 @@ require([
 			if( resInfo.header == 'msg')
 				addToChart(resInfo.msg);
 				
-			myLog( "" + resInfo.msg );			
+			//myLog( "" + resInfo.msg );			
 		}				
 	});
 
@@ -112,12 +112,17 @@ require([
 			markers : true
 		});
 
+		var minXaxis = 0;
+		var maxXaxis = 60;
 		// Add axes
 		chart.addAxis("x", {
 			microTickStep : 1,
 			minorTickStep : 1,
-			max : 60
+			min : minXaxis,
+			max : maxXaxis
 		});
+		
+				
 		chart.addAxis("y", {
 			vertical : true,
 			fixLower : "major",
@@ -128,9 +133,11 @@ require([
 		// Add the storeseries - Query for all data
 		chart.addSeries("y", new StoreSeries(store, {}, "value"));
 
+		
 		// Render the chart!
 		chart.render();
 
+		
 		// Simulate a data chage from a store or service
 //		var startNumber = data.length;
 //		var interval = setInterval(function() {
@@ -148,15 +155,32 @@ require([
 		var startNumber = data.length;
 		function addToChart( value )
 		{
-			myLog("addToChart " + startNumber);
+			var newid = ++startNumber;
+			
 			store.notify({
 				value : Number(value),
-				id : ++startNumber
+				id : newid
 			});
 			if (startNumber > 25)
 			{
-				store.remove( startNumber - 24 );
-				store.notify();
+				var newx = ++minXaxis;
+				var newy = ++maxXaxis;
+				
+//				store.remove( startNumber - 26 ); // funker ikke...
+//				store.notify();
+				
+				// re-add axis to make it move...
+				chart.addAxis("x", {
+					microTickStep : 1,
+					minorTickStep : 1,
+					min : newx,
+					max : newy
+				});
+			
+				chart.render();
+				
+				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
+//				chart.zoomIn("x",[newx, newy ]);
 			}
 				
 		}

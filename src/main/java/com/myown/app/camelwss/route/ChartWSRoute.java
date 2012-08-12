@@ -20,9 +20,7 @@ public class ChartWSRoute extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 		
-		
-		
-		
+				
 		from("websocket:"+CONNECTION_URI+"?enableJmx=false")
 		.routeId("chartRoute")
         .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
@@ -83,6 +81,8 @@ public class ChartWSRoute extends RouteBuilder {
 		from("direct:chartUt")
 		.log(LoggingLevel.DEBUG,">> msg response : ${body}")
         .to("websocket:"+CONNECTION_URI+"?sendToAll=true&enableJmx=false");
+		
+		
 
 	}
 

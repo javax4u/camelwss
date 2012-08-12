@@ -29,6 +29,7 @@ public class BasicWSRoute extends RouteBuilder {
 			@Override
 			public void process(Exchange exchange) throws Exception {
 				Info info = exchange.getIn().getBody(Info.class);
+				System.out.println(info);
 				logger.info("data from client: " + info);
 				DateTime nuh = new DateTime();
 				String msg = "pong: " + nuh.toString("HH:mm:ss");
