@@ -5,8 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<script src="dojo/dojo.js.uncompressed.js"></script>
-<script src="js/myown.js" ></script>
+<script src="js/basic/dojo.js.uncompressed.js"></script>
+<script src="js/basic/myown.js" ></script>
 
 <title>Very Basic Demo</title>
 </head>

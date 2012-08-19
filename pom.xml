@@ -39,12 +39,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>1.2</version>
-		</dependency>
-
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
@@ -100,14 +94,7 @@
 			<version>${camel-version}</version>
 		</dependency>
 
-		<!-- Quartz support -->
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-quartz</artifactId>
-			<version>${camel-version}</version>
-		</dependency>
-
-
+		
 		<!-- Spring support -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -148,15 +135,6 @@
 		</dependency>
 
 		
-
-
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20090211</version>
-		</dependency>
-
-
 		<!-- logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>

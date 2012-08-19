@@ -63,16 +63,16 @@ public class BasicWSRouteTest extends CamelSpringTestSupport {
 
         // Jackson
         ObjectMapper mapper = new ObjectMapper();
-        Info info = new Info();
+        WsMessage info = new WsMessage();
         info.setHeader("woot");
-        info.setMsg("hest");
+        info.setContent("hest");
         
         websocket.sendTextMessage(mapper.writeValueAsString(info));
         assertTrue(latch.await(10, TimeUnit.SECONDS));
 
         assertEquals(1, received.size());
-        Info result = mapper.readValue(received.get(0), Info.class);
-        assertTrue(result.getMsg().startsWith("pong:"));
+        WsMessage result = mapper.readValue(received.get(0), WsMessage.class);
+        assertTrue(result.getContent().startsWith("pong:"));
 
         websocket.close();
         c.close();

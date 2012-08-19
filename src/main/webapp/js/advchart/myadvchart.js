@@ -7,16 +7,25 @@ require([
 	  "dojo/dom",
 	  "dojox/socket",
 	  "dojo/json",
+	  "dojo/_base/fx",
 	
 	  "dojox/charting/plot2d/Lines",
 	  "dojox/charting/axis2d/Default", 
 	  "dojo/domReady!" 
-	], function(Chart, Claro, Observable, Memory, StoreSeries, dom, dojoxSocket, json ) {
-
+	], function(Chart, Claro, Observable, Memory, StoreSeries, dom, dojoxSocket, json, fx ) {
 	
-	var socket = dojoxSocket("ws://localhost:9292/chart");
+	    
+	dojo.style("h2", "opacity", "0");
+	
+	
+	var connectionUrl = "ws://localhost:9292/advchart";
+	var socket = dojoxSocket(connectionUrl);
 	//	socket = socketReconnect(socket);  // funker ikke med custom build prosessen
 
+	var start = false;
+	
+	
+	
 	socket.on("message", function(event) {
 		if( event.error)
 		{
@@ -26,9 +35,22 @@ require([
 		{
 			var resInfo = json.parse(event.data);
 			if( resInfo.header == 'msg')
+			{
 				addToChart(resInfo.content);
+			}
+			else if( resInfo.header == 'heartbeat' )
+			{
+				var info = { "header":"heartbeat" ,
+						"sender":"client",
+						"senderTimestamp":resInfo.senderTimestamp,
+						"content":new Date().getTime() };
+				sendToServer( info );
+//				myLog( "heartbeat recieved" );
 				
-			//myLog( "" + resInfo.msg );			
+				var target = dom.byId("h2");
+				dojo.style("h2", "opacity", "1");
+			    fx.fadeOut({ node: target, duration: 2000 }).play();
+			}
 		}				
 	});
 
@@ -37,30 +59,51 @@ require([
 		sendToServer(info);
 	});
 
+	var errorHappened = false;
 	socket.on( "error",  function(e) {
-		myLog("error.. " + e);
-		myLog("error.. " + event.error);
-		myLog("error.. " + event.type);
+		//myLog("error.. " + e); //
+		//myLog("error.. " + event.error); // not all errors have an error
+		//myLog("error.. " + event.type); // this just say "error"
+		myLog("some error happended");
+		start = false;	// to avoid looping error on reconnect
+		errorHappened = true;
 	});
 
-	socket.on("close", function(event, args){
+	socket.on("close", function(event){
 		myLog('disconnected');
-		socket.close();
-	}, false, false);
+//		myLog( event.type); //close
+		myLog( event.reason ); // ??
+		myLog( 'start: ' + start );
+		myLog( "readystate: " + socket.readyState ); // 
+		
+		// my reconnect strategy.
+		if( start && socket.readyState == 3 && !errorHappened){
+			myLog( "reconnecting?" ); // 
+			dojoxSocket.replace(socket, dojoxSocket(connectionUrl), true);
+		}
+		else
+		{
+			socket.close();
+		}
+		
+	});
 
+	
 	addStartClick = function() 
     { 
 		var info = { "header":"cmd" , "content":"start" };
-            dom.byId("startButton").onclick = function(evt) { 
-            	sendToServer(info); 
-            };
+        dom.byId("startButton").onclick = function(evt) { 
+        	sendToServer(info); 
+        	start = true;
+        };
     };
     addStopClick = function() 
     { 
 		var info = { "header":"cmd" , "content":"stop" };
-            dom.byId("stopButton").onclick = function(evt) { 
-            	sendToServer(info); 
-            };
+        dom.byId("stopButton").onclick = function(evt) { 
+        	sendToServer(info); 
+        	start = false;
+        };
     };
     addStartClick();
     addStopClick();
@@ -179,7 +222,7 @@ require([
 			
 				chart.render();
 				
-				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
+//				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
 //				chart.zoomIn("x",[newx, newy ]);
 			}
 				

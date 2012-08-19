@@ -32,9 +32,11 @@
 		<camel:jmxAgent id="agent" disabled="true" />
 		<camel:routeBuilder ref="basicRoute" />
 		<camel:routeBuilder ref="chartRoute" />
+		<camel:routeBuilder ref="advChartRoute" />
 	</camel:camelContext>
 	
 	<bean id="basicRoute" class="com.myown.app.camelwss.route.BasicWSRoute" />
 	<bean id="chartRoute" class="com.myown.app.camelwss.route.ChartWSRoute" />
+	<bean id="advChartRoute" class="com.myown.app.camelwss.route.AdvChartWSRoute" />
 
 </beans>

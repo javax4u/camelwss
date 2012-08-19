@@ -23,24 +23,25 @@ public class BasicWSRoute extends RouteBuilder {
 		.routeId("mainRoute")
         .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
         //.delay(2000)
-        .unmarshal().json(JsonLibrary.Jackson, Info.class)
+        .unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
         .process(new Processor() {
 			
 			@Override
 			public void process(Exchange exchange) throws Exception {
-				Info info = exchange.getIn().getBody(Info.class);
-				System.out.println(info);
+				WsMessage info = exchange.getIn().getBody(WsMessage.class);
+				
 				logger.info("data from client: " + info);
 				DateTime nuh = new DateTime();
 				String msg = "pong: " + nuh.toString("HH:mm:ss");
-				Info response = new Info();
+				WsMessage response = new WsMessage();
 				response.setHeader("msg");
-				response.setMsg(msg);
-				exchange.getIn().setBody(response, Info.class);
+				response.setSender("server");
+				response.setContent(msg);
+				exchange.getIn().setBody(response, WsMessage.class);
 				
 			}
 		})
-		.marshal().json(JsonLibrary.Jackson, Info.class)
+		.marshal().json(JsonLibrary.Jackson, WsMessage.class)
 		.to("direct:ut");
 		
 		

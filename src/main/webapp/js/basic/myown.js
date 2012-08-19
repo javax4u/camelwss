@@ -12,7 +12,7 @@ require([
 
 			function send(data) {
 				elem = dom.byId("my_div");
-				var info = "[header:" + data.header + "|" + "msg:" + data.msg + "]";
+				var info = "[header:" + data.header + "|" + "content:" + data.content + "]";
 				elem.innerHTML = elem.innerHTML +  "sending to server: "+info+" : redystate: " + socket.readyState + '<br>';
 				
 				return socket.send(json.stringify(data));
@@ -26,12 +26,12 @@ require([
 				else
 				{
 					var resInfo = json.parse(event.data);
-					myLog( "" + resInfo.msg );					
+					myLog( "" + resInfo.content );					
 				}				
 			});
 
 			socket.on("open", function(event) {
-				var info = { "header":"msg" , "msg":"hi server" };
+				var info = { "header":"msg" , "content":"hi server" };
 				send(info);
 			});
 			
@@ -48,7 +48,7 @@ require([
 			
 			addClick = function() 
             { 
-				var info = { "header":"msg" , "msg":"ping" };
+				var info = { "header":"msg" , "content":"ping" };
                     dom.byId("myButton").onclick = function(evt) { 
                             send(info); 
                     };
