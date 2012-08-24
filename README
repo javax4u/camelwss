@@ -1,3 +1,7 @@
 This is a websocket "hello world" example with apache camel(2.10) server side and Dojo Toolkit (1.7.3) on client side.
 
+Basicly just download
+mvn jetty:run
+Open http://localhost:12000/camelwss/ in Chrome. 
 
+Firefox might work. IE6/7/8/9 Absolutely does not work. Opera 12.01 might work, but you have to manually enable websocket.
