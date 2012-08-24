@@ -1,7 +1,5 @@
 package com.myown.app.camelwss.route;
 
-import java.util.Random;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -12,11 +10,11 @@ import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AdvChartWSRoute extends RouteBuilder {
+public class HeartbeatWSRoute extends RouteBuilder {
 	
-static Logger logger = LoggerFactory.getLogger(AdvChartWSRoute.class);
+static Logger logger = LoggerFactory.getLogger(HeartbeatWSRoute.class);
 	
-	private final String CONNECTION_URI = "//localhost:9292/advchart";
+	private final String CONNECTION_URI = "//localhost:9292/heartbeat";
 
 	@Override
 	public void configure() throws Exception {
@@ -25,7 +23,7 @@ static Logger logger = LoggerFactory.getLogger(AdvChartWSRoute.class);
 			.log("oops EofException");
 		
 		from("websocket:"+CONNECTION_URI+"?enableJmx=false")
-		.routeId("chartRoute")
+		.routeId("advChartRoute")
 //        .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
         .unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
         .process(new Processor() {
@@ -33,7 +31,6 @@ static Logger logger = LoggerFactory.getLogger(AdvChartWSRoute.class);
 			@Override
 			public void process(Exchange exchange) throws Exception {
 				WsMessage info = exchange.getIn().getBody(WsMessage.class);
-				
 				
 				if( "heartbeat".equals(info.getHeader()))
 				{
@@ -56,12 +53,10 @@ static Logger logger = LoggerFactory.getLogger(AdvChartWSRoute.class);
 					if( "start".equals(info.getContent()))
 					{
 						exchange.getContext().startRoute("heartbeatRoute");
-						exchange.getContext().startRoute("timerRoute");
 					}
 					if( "stop".equals(info.getContent()))
 					{
 						exchange.getContext().stopRoute("heartbeatRoute");
-						exchange.getContext().stopRoute("timerRoute");
 					}
 				}
 			}
@@ -88,30 +83,6 @@ static Logger logger = LoggerFactory.getLogger(AdvChartWSRoute.class);
 		})
 		.marshal().json(JsonLibrary.Jackson, WsMessage.class)
 		.to("direct:chartAdvUt");
-		
-		
-		from("timer://myTimer?fixedRate=true&period=100")
-		.routeId("timerRoute")
-		.noAutoStartup()
-		.process(new Processor() {
-			
-			Random randomGenerator = new Random();
-			
-			@Override
-			public void process(Exchange exchange) throws Exception {
-							
-				WsMessage response = new WsMessage();
-				response.setHeader("msg");
-				String message = String.valueOf(randomGenerator.nextInt(20) + 1);
-				response.setSender("server");
-				response.setContent( message );
-				exchange.getIn().setBody(response, WsMessage.class);
-				
-			}
-		})
-		.marshal().json(JsonLibrary.Jackson, WsMessage.class)
-		.to("direct:chartAdvUt");
-		
 		
 		
 		from("direct:chartAdvUt")

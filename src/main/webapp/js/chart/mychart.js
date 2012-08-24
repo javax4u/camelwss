@@ -86,7 +86,7 @@ require([
 			{ id: 2, value: 16 },
 			{ id: 3, value: 11 },
 			{ id: 4, value: 18 },
-			{ id: 5, value: 26 }			
+			{ id: 5, value: 3 }			
 		];
 
 		// Create the data store
@@ -166,9 +166,6 @@ require([
 				var newx = ++minXaxis;
 				var newy = ++maxXaxis;
 				
-//				store.remove( startNumber - 26 ); // funker ikke...
-//				store.notify();
-				
 				// re-add axis to make it move...
 				chart.addAxis("x", {
 					microTickStep : 1,
@@ -179,8 +176,7 @@ require([
 			
 				chart.render();
 				
-				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
-//				chart.zoomIn("x",[newx, newy ]);
+//				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
 			}
 				
 		}

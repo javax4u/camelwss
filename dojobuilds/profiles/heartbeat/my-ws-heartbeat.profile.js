@@ -2,7 +2,7 @@ dependencies = {
 	basePath: './',
 	optimize:"shrinksafe",
 	stripConsole: "all",
-	releaseDir: "./my-ws-advchart",	
+	releaseDir: "./my-ws-heartbeat",	
 	action: "release", 
 	selectorEngine: "acme",
 	

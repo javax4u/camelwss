@@ -11,7 +11,7 @@
 	<h1>Websocket demo</h1>
 	<a href="/camelwss/basic.jsp">Basic Demo</a><br>
 	<a href="/camelwss/chart.jsp">WS Chart Demo</a><br>
-	<a href="/camelwss/advchart.jsp">Advanced WS Chart Demo</a><br>
+	<a href="/camelwss/heartbeat.jsp">Heatbeat & Reconnect Demo</a><br>
         
     </body>
 </html>

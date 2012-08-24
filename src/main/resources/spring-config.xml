@@ -28,15 +28,15 @@
 		<property name="connectionFactory" ref="jmsConnectionFactory" />
 	</bean>
 
-	<camel:camelContext id="context1" trace="true">
+	<camel:camelContext id="context1" trace="false"> <!-- set trace to true to get more debug infor -->
 		<camel:jmxAgent id="agent" disabled="true" />
 		<camel:routeBuilder ref="basicRoute" />
 		<camel:routeBuilder ref="chartRoute" />
-		<camel:routeBuilder ref="advChartRoute" />
+		<camel:routeBuilder ref="heartbeatRoute" />
 	</camel:camelContext>
 	
 	<bean id="basicRoute" class="com.myown.app.camelwss.route.BasicWSRoute" />
 	<bean id="chartRoute" class="com.myown.app.camelwss.route.ChartWSRoute" />
-	<bean id="advChartRoute" class="com.myown.app.camelwss.route.AdvChartWSRoute" />
+	<bean id="heartbeatRoute" class="com.myown.app.camelwss.route.HeartbeatWSRoute" />
 
 </beans>

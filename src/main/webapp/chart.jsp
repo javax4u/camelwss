@@ -11,7 +11,7 @@
 <title>Chart demo</title>
 </head>
 <body>
-	<h1>Excessively magnifisent chart demo</h1>
+	<h1>Excessively Magnifisent Chart Demo</h1>
 
 	<a href="/camelwss/index.jsp">Back to index</a>
 	<br>

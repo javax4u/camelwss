@@ -3,6 +3,7 @@ package com.myown.app.camelwss.route;
 import java.util.Random;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -25,7 +26,7 @@ public class ChartWSRoute extends RouteBuilder {
 				
 		from("websocket:"+CONNECTION_URI+"?enableJmx=false")
 		.routeId("chartRoute")
-//        .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
+        .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
         .unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
         .process(new Processor() {
 			

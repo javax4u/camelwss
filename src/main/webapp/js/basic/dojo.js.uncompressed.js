@@ -6563,16 +6563,6 @@ define(["./_base/sniff", "./_base/lang", "./_base/window"],
 });
 
 },
-'dojox/main':function(){
-define("dojox/main", ["dojo/_base/kernel"], function(dojo) {
-	// module:
-	//		dojox/main
-	// summary:
-	//		The dojox package main module; dojox package is somewhat unusual in that the main module currently just provides an empty object.
-
-	return dojo.dojox;
-});
-},
 'dojo/_base/browser':function(){
 if(require.has){
 	require.has.add("config-selectorEngine", "acme");
@@ -14339,19 +14329,6 @@ return ret;
 });
 
 },
-'dijit/main':function(){
-define("dijit/main", [
-	"dojo/_base/kernel"
-], function(dojo){
-	// module:
-	//		dijit
-	// summary:
-	//		The dijit package main module
-
-	return dojo.dijit;
-});
-
-},
 'dojo/regexp':function(){
 define(["./_base/kernel", "./_base/lang"], function(dojo, lang) {
 	// module:
@@ -14709,67 +14686,6 @@ define([
 	}
 
 	return dojo;
-});
-
-},
-'dojox/socket/Reconnect':function(){
-// wrapped by build app
-define("dojox/socket/Reconnect", ["dijit","dojo","dojox"], function(dijit,dojo,dojox){
-dojo.provide("dojox.socket.Reconnect");
-
-dojox.socket.Reconnect = function(socket, options){
-	// summary:
-	//		Provides auto-reconnection to a websocket after it has been closed
-	//	socket:
-	//		Socket to add reconnection support to.
-	// returns:
-	// 		An object that implements the WebSocket API
-	// example:
-	//		You can use the Reconnect module:
-	//		| dojo.require("dojox.socket");
-	//		| dojo.require("dojox.socket.Reconnect");
-	//		| var socket = dojox.socket({url:"/comet"});
-	//		| // add auto-reconnect support
-	//		| socket = dojox.socket.Reconnect(socket);
-	options = options || {};
-	var reconnectTime = options.reconnectTime || 10000;
-	
-	var connectHandle = dojo.connect(socket, "onclose", function(event){
-		clearTimeout(checkForOpen);
-		if(!event.wasClean){
-			socket.disconnected(function(){
-				dojox.socket.replace(socket, newSocket = socket.reconnect());
-			});
-		}
-	});
-	var checkForOpen, newSocket;
-	if(!socket.disconnected){
-		// add a default impl if it doesn't exist
-		socket.disconnected = function(reconnect){
-			setTimeout(function(){
-				reconnect();
-				checkForOpen = setTimeout(function(){
-					//reset the backoff
-					if(newSocket.readyState < 2){
-						reconnectTime = options.reconnectTime || 10000;
-					}
-				}, 10000);
-			}, reconnectTime);
-			// backoff each time
-			reconnectTime *= options.backoffRate || 2;
-		};
-	}
-	if(!socket.reconnect){
-		// add a default impl if it doesn't exist
-		socket.reconnect = function(){
-			return socket.args ?
-				dojox.socket.LongPoll(socket.args) :
-				dojox.socket.WebSocket({url: socket.URL || socket.url}); // different cases for different impls
-		};
-	}
-	return socket;
-};
-
 });
 
 },

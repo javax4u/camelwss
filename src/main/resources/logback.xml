@@ -3,16 +3,19 @@
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%.-1level|%-40.40logger{0}|%msg%n</pattern>
-<!--       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>  -->
+<!--       <pattern>%.-1level|%-40.40logger{0}|%msg%n</pattern> -->
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern> 
     </encoder>
   </appender>
 
-  <logger name="org.apache.camel" level="info" />
+  <logger name="org.apache.camel" level="warn" />
   <logger name="org.apache.activemq" level="warn" />
+  
+  <logger name="com.myown.app.camelwss.route" level="debug" />
+
 
  
-  <root level="debug">
+  <root level="warn">
     <appender-ref ref="console" />
   </root>
 </configuration>
