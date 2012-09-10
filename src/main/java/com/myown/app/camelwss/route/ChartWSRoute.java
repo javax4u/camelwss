@@ -40,8 +40,7 @@ public class ChartWSRoute extends RouteBuilder {
 						exchange.getContext().startRoute("timerRoute");
 					if( "stop".equals(info.getContent()))
 						exchange.getContext().stopRoute("timerRoute");
-				}
-				
+				}				
 				
 				logger.info("data from client: " + info);
 				WsMessage response = new WsMessage();
@@ -50,12 +49,11 @@ public class ChartWSRoute extends RouteBuilder {
 				response.setSenderTimestamp(String.valueOf(new DateTime().getMillis()));
 				response.setContent("pong");
 				
-				exchange.getIn().setBody(response, WsMessage.class);
-				
+				exchange.getIn().setBody(response, WsMessage.class);				
 			}
 		})
 		.marshal().json(JsonLibrary.Jackson, WsMessage.class)
-		.to("direct:chartUt");
+		.to("direct:chartUt");	// intern camel kø
 		
 		
 		
@@ -84,11 +82,6 @@ public class ChartWSRoute extends RouteBuilder {
 		
 		
 		from("direct:chartUt")
-//		.log(LoggingLevel.DEBUG,">> msg response : ${body}")
         .to("websocket:"+CONNECTION_URI+"?sendToAll=true&enableJmx=false");
-		
-		
-
 	}
-
 }

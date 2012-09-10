@@ -4,7 +4,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
-import org.eclipse.jetty.io.EofException;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
@@ -19,12 +18,8 @@ static Logger logger = LoggerFactory.getLogger(HeartbeatWSRoute.class);
 	@Override
 	public void configure() throws Exception {
 		
-		onException(EofException.class)
-			.log("oops EofException");
-		
 		from("websocket:"+CONNECTION_URI+"?enableJmx=false")
 		.routeId("advChartRoute")
-//        .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
         .unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
         .process(new Processor() {
 			
@@ -45,7 +40,6 @@ static Logger logger = LoggerFactory.getLogger(HeartbeatWSRoute.class);
 						Interval diff = new Interval(start, now);
 						logger.info("roundtrip time: " + diff.toDurationMillis());
 					}
-					
 				}
 				
 				if( "cmd".equals(info.getHeader()))
@@ -64,7 +58,7 @@ static Logger logger = LoggerFactory.getLogger(HeartbeatWSRoute.class);
 		
 		
 		
-		from("timer://myTimer?fixedRate=true&period=3000")	// 10sec
+		from("timer://myTimer?fixedRate=true&period=3000")	// 3sec
 		.routeId("heartbeatRoute")
 		.noAutoStartup()
 		.process(new Processor() {
@@ -86,9 +80,6 @@ static Logger logger = LoggerFactory.getLogger(HeartbeatWSRoute.class);
 		
 		
 		from("direct:chartAdvUt")
-//		.log(LoggingLevel.DEBUG,">> msg response : ${body}")
         .to("websocket:"+CONNECTION_URI+"?sendToAll=true&enableJmx=false");
-
 	}
-
 }

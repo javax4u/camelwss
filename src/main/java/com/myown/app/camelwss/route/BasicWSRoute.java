@@ -9,49 +9,46 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class BasicWSRoute extends RouteBuilder {
-	
+
 	static Logger logger = LoggerFactory.getLogger(BasicWSRoute.class);
-	
-	private final String CONNECTION_URI = "//localhost:9292/basic"; 
+
+	private final String CONNECTION_URI = "//localhost:9292/basic";
 
 	@Override
 	public void configure() throws Exception {
-		
-		from("websocket:"+CONNECTION_URI+"?enableJmx=false")
+
+		from("websocket:" + CONNECTION_URI + "?enableJmx=false")
 		.routeId("mainRoute")
-        .log(LoggingLevel.DEBUG,">> msg recieved : ${body}")
-        //.delay(2000)
-        .unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
-        .process(new Processor() {
-			
+		.log(LoggingLevel.DEBUG, ">> msg recieved : ${body}")
+		// .delay(2000)
+		.unmarshal().json(JsonLibrary.Jackson, WsMessage.class)
+		.process(new Processor() {
+
 			@Override
 			public void process(Exchange exchange) throws Exception {
+				// how to get the inbound message
 				WsMessage info = exchange.getIn().getBody(WsMessage.class);
-				
 				logger.info("data from client: " + info);
+
 				DateTime nuh = new DateTime();
 				String msg = "pong: " + nuh.toString("HH:mm:ss");
 				WsMessage response = new WsMessage();
 				response.setHeader("msg");
 				response.setSender("server");
 				response.setContent(msg);
+				// Den we set the outbound message on getIn. It will be
+				// copied to the "out"
 				exchange.getIn().setBody(response, WsMessage.class);
-				
+
 			}
 		})
 		.marshal().json(JsonLibrary.Jackson, WsMessage.class)
-		.to("direct:ut");
-		
-		
-		from("direct:ut")
-		.log(LoggingLevel.DEBUG,">> msg response : ${body}")
-        .to("websocket:"+CONNECTION_URI+"?sendToAll=true&enableJmx=false");
+		.log(LoggingLevel.DEBUG, ">> msg response : ${body}")
+		.to("websocket:" + CONNECTION_URI + "?sendToAll=true&enableJmx=false");
 	}
-	
-	String getConnectionUri()
-	{
+
+	String getConnectionUri() {
 		return CONNECTION_URI;
 	}
 }

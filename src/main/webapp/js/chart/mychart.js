@@ -18,17 +18,13 @@ require([
 	//	socket = socketReconnect(socket);  // funker ikke med custom build prosessen
 
 	socket.on("message", function(event) {
-		if( event.error)
-		{
+		if( event.error) {
 			myLog("message: oppstod feil.. " + event.error);
 		}
-		else
-		{
+		else {
 			var resInfo = json.parse(event.data);
 			if( resInfo.header == 'msg')
 				addToChart(resInfo.content);
-				
-			//myLog( "" + resInfo.msg );			
 		}				
 	});
 
@@ -48,19 +44,17 @@ require([
 		socket.close();
 	}, false, false);
 
-	addStartClick = function() 
-    { 
+	addStartClick = function() { 
 		var info = { "header":"cmd" , "content":"start" };
-            dom.byId("startButton").onclick = function(evt) { 
-            	sendToServer(info); 
-            };
+        dom.byId("startButton").onclick = function(evt) { 
+        	sendToServer(info); 
+        };
     };
-    addStopClick = function() 
-    { 
+    addStopClick = function() { 
 		var info = { "header":"cmd" , "content":"stop" };
-            dom.byId("stopButton").onclick = function(evt) { 
-            	sendToServer(info); 
-            };
+        dom.byId("stopButton").onclick = function(evt) { 
+        	sendToServer(info); 
+        };
     };
     addStartClick();
     addStopClick();
@@ -72,113 +66,92 @@ require([
 	
 
 	
-    function myLog( str )
-    {
+    function myLog( str ) {
     	elem = dom.byId("my_div");
 		elem.innerHTML = elem.innerHTML +  str + '<br>';
     };
 	
 	
-		// Initial data
-		var data = [
-			// This information, presumably, would come from a database or web service
-			{ id: 1, value: 20 },
-			{ id: 2, value: 16 },
-			{ id: 3, value: 11 },
-			{ id: 4, value: 18 },
-			{ id: 5, value: 3 }			
-		];
+	// Initial data
+	var data = [
+		// This information, presumably, would come from a database or web service
+		{ id: 1, value: 20 },
+		{ id: 2, value: 16 },
+		{ id: 3, value: 11 },
+		{ id: 4, value: 18 },
+		{ id: 5, value: 3 }			
+	];
 
-		// Create the data store
-		// Store information in a data store on the client side
-		var store = Observable(new Memory({
-			data : {
-				identifier : "id",
-				label : "Some Datapoints",
-				items : data
-			}
-		}));
-
-		// Create the chart within it's "holding" node
-		// Global so users can hit it from the console
-		chart = new Chart("chartNode");
-
-		// Set the theme
-		chart.setTheme(Claro);
-
-		// Add the only/default plot 
-		chart.addPlot("default", {
-			type : "Lines",
-			markers : true
-		});
-
-		var minXaxis = 0;
-		var maxXaxis = 60;
-		// Add axes
-		chart.addAxis("x", {
-			microTickStep : 1,
-			minorTickStep : 1,
-			min : minXaxis,
-			max : maxXaxis
-		});
-		
-				
-		chart.addAxis("y", {
-			vertical : true,
-			fixLower : "major",
-			fixUpper : "major",
-			minorTickStep : 1
-		});
-
-		// Add the storeseries - Query for all data
-		chart.addSeries("y", new StoreSeries(store, {}, "value"));
-
-		
-		// Render the chart!
-		chart.render();
-
-		
-		// Simulate a data chage from a store or service
-//		var startNumber = data.length;
-//		var interval = setInterval(function() {
-//			// Notify the store of a data change
-//			store.notify({
-//				value : Math.ceil(Math.random() * 29),
-//				id : ++startNumber,
-//				site : 1
-//			});
-//			// Stop at 50
-//			if (startNumber == 120)
-//				clearInterval(interval);
-//		}, 1000);
-		
-		var startNumber = data.length;
-		function addToChart( value )
-		{
-			var newid = ++startNumber;
-			
-			store.notify({
-				value : Number(value),
-				id : newid
-			});
-			if (startNumber > 25)
-			{
-				var newx = ++minXaxis;
-				var newy = ++maxXaxis;
-				
-				// re-add axis to make it move...
-				chart.addAxis("x", {
-					microTickStep : 1,
-					minorTickStep : 1,
-					min : newx,
-					max : newy
-				});
-			
-				chart.render();
-				
-//				myLog("addToChart newid: " + startNumber + " x: " + minXaxis + " y: " + maxXaxis);
-			}
-				
+	// Create the data store
+	// Store information in a data store on the client side
+	var store = Observable(new Memory({
+		data : {
+			identifier : "id",
+			label : "Some Datapoints",
+			items : data
 		}
+	}));
 
+	// Create the chart within it's "holding" node
+	// Global so users can hit it from the console
+	chart = new Chart("chartNode");
+
+	// Set the theme
+	chart.setTheme(Claro);
+
+	// Add the only/default plot 
+	chart.addPlot("default", {
+		type : "Lines",
+		markers : true
+	});
+
+	var minXaxis = 0;
+	var maxXaxis = 60;
+	// Add axes
+	chart.addAxis("x", {
+		microTickStep : 1,
+		minorTickStep : 1,
+		min : minXaxis,
+		max : maxXaxis
+	});
+	
+			
+	chart.addAxis("y", {
+		vertical : true,
+		fixLower : "major",
+		fixUpper : "major",
+		minorTickStep : 1
+	});
+
+	// Add the storeseries - Query for all data
+	chart.addSeries("y", new StoreSeries(store, {}, "value"));
+
+	
+	// Render the chart!
+	chart.render();
+			
+	var startNumber = data.length;
+	function addToChart( value )
+	{
+		var newid = ++startNumber;
+		
+		store.notify({
+			value : Number(value),
+			id : newid
+		});
+		if (startNumber > 25) {
+			var newx = ++minXaxis;
+			var newy = ++maxXaxis;
+			
+			// re-add axis to make it move...
+			chart.addAxis("x", {
+				microTickStep : 1,
+				minorTickStep : 1,
+				min : newx,
+				max : newy
+			});
+		
+			chart.render();			
+		}			
+	}
 });
