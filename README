@@ -1,5 +1,10 @@
 This is a websocket "hello world" example with apache camel(2.10) server side and Dojo Toolkit (1.7.3) on client side.
 
+Requirements:
+Java (obvious..)
+Maven
+
+
 Basicly just download
 mvn jetty:run
 Open http://localhost:12000/camelwss/ in Chrome. 
